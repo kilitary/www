@@ -1,0 +1,11 @@
+hex_bytes = "0F D2 16 2C D1 1B 4E 7F D6 E9 2E 79 B9 FD B6 97 C3 62 76 B9 59 26 A7 C3 22 1D 5D 5E 2F F7 59 22 F8 9B 9D 1E E7 65 22 DD 5E 14 3E 97 A5 61 7A DA 7D 16 E9 62 2C D1 1B 4E 7F D6 E9 2E A2 55 2A D2 D1 E5 F5 32 4B 44 47 A7 E5 64 68 58 4E CF 07 E1 70 69 98 9E 76 9F E7 22 DD 76 2F 62 97 ED 65 B6 48 77 63 89 E6 F9 39 BD DC 4E 92 45 BA 59 9F B5 17 B1 CB F6 32 5B A4 8B C9 58 A2 79 7E 4E 2F B7 93 64 91 AE D6 67 ED 45 EC B2 BD CC 16 E9 68 38 96 68 9E 9F D3 CB ED 24 59 A4 8B C9 FA AC BD 88 5D B6 97 D9 22 9D EC C6 12 CD F3 73 7A B9 9D 24 8B 74 B9 3E 6B 2F 62 97 ED 65 B6 48 77 B3 B1 44 F3 FC 9C 5E 6E 27 C9 22 5D CC D6 67 ED 45 EC B2 BD CC 16 E9 6C 38 96 68 9E 9F D3 CB ED 24 59 A4 8B D5 FA AC BD 88 5D B6 97 D9 22 5D 8D C6 12 CD F3 73 7A B9 9D 24 8B 74 B1 59 BF DB EF F3 5E 41 38 9C 9D 1E 87 C5 69 76 9A 9E 17 B2 DF 62 1F EF 15 84 C3 F1 CD 32 3D 4C 0E D3 C3 3E DE 2B 08 87 E3 A1 E1 F1 3A 7C 2E 37 CB F4 30 39 4C 0F FB"
+
+import math
+from collections import Counter
+
+bytes_seq = bytes(int(b, 16) for b in hex_bytes.split())
+length = len(bytes_seq)
+counts = Counter(bytes_seq)
+entropy = -sum((cnt / length) * math.log2(cnt / length) for cnt in counts.values())
+print(f"Length: {length} bytes")
+print(f"Shannon entropy: {entropy:.4f} bits per byte")

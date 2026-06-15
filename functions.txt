@@ -1,0 +1,40 @@
+#query#
+for each @function in #functions#:
+ 1. create @key by replacing all "_" in @function. example: 'account_info' => 'accountinfo'
+ 2. fetch 'https://www.mql5.com/en/docs/python_metatrader5/mt5@key@_py'
+ 3. from page: extract all possible input parameter info, all possible output info, all examples
+ 4. add collected info to mq5_api.md in markdown format.
+
+#functions#
+initialize
+shutdown
+version
+last_error
+account_info
+terminal_info
+symbols_total
+symbols_get
+symbol_info
+symbol_info_tick
+symbol_select
+market_book_add
+market_book_get
+market_book_release
+copy_rates_from
+copy_rates_from_pos
+copy_rates_range
+copy_ticks_from
+copy_ticks_range
+orders_total
+orders_get
+order_calc_margin
+order_calc_profit
+order_check
+order_send
+positions_total
+positions_get
+history_orders_total
+history_orders_get
+history_deals_total
+history_deals_get
+

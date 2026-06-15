@@ -1,0 +1,33 @@
+//+------------------------------------------------------------------+
+//|  MQL5 script: Print current orders and apply trailing TP        |
+//+------------------------------------------------------------------+
+#property script_show_inputs
+input double   TrailStep = 10.0;   // Trail step in points
+
+void OnStart()
+  {
+   Print("--- Current Orders Detail ---");
+   int total=OrdersTotal();
+   for(int i=0;i<total;i++)
+     {
+      if(!OrderSelect(i,SELECT_BY_POS,MODE_TRADES))
+         continue;
+      string type = (OrderType()==ORDER_TYPE_BUY) ? "BUY" : (OrderType()==ORDER_TYPE_SELL) ? "SELL" : "UNKNOWN";
+      PrintFormat("Ticket:%d Symbol:%s Type:%s Lots:%.2f OpenPrice:%.5f SL:%.5f TP:%.5f Profit:%.2f",
+                  OrderTicket(),OrderSymbol(),type,OrderLots(),OrderOpenPrice(),OrderStopLoss(),OrderTakeProfit(),OrderProfit());
+      //--- trailing take‑profit logic
+      if(OrderType()==ORDER_TYPE_BUY && OrderTakeProfit()>0)
+        {
+         double newTP = NormalizeDouble(SymbolInfoDouble(_Symbol,SYMBOL_BID) + TrailStep*_Point,Digits);
+         if(newTP>OrderTakeProfit())
+            OrderModify(OrderTicket(),OrderOpenPrice(),OrderStopLoss(),newTP,0,clrNONE);
+        }
+      else if(OrderType()==ORDER_TYPE_SELL && OrderTakeProfit()>0)
+        {
+         double newTP = NormalizeDouble(SymbolInfoDouble(_Symbol,SYMBOL_ASK) - TrailStep*_Point,Digits);
+         if(newTP<OrderTakeProfit())
+            OrderModify(OrderTicket(),OrderOpenPrice(),OrderStopLoss(),newTP,0,clrNONE);
+        }
+     }
+   Print("--- End of Orders ---");
+  }
