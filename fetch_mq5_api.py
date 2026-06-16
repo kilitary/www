@@ -63,7 +63,7 @@ def extract_section(soup: BeautifulSoup, heading: str) -> str:
     # If not found, try looking for paragraphs with BoldTitles class
     if not target_paragraph:
         for p in paragraphs:
-            classes = p.get("class", [])
+            classes = p.get("class") or []
             if "p_BoldTitles" in classes and heading in p.get_text(strip=True):
                 target_paragraph = p
                 break
@@ -89,8 +89,8 @@ def extract_section(soup: BeautifulSoup, heading: str) -> str:
         # Stop if we hit another heading
         if (
             current.name == "p"
-            and current.get("class")
-            and "p_BoldTitles" in current.get("class", [])
+            and (current_classes := current.get("class") or [])
+            and "p_BoldTitles" in current_classes
         ):
             break
         # Stop if we hit a heading with specific text
@@ -129,7 +129,7 @@ def clean_markdown(section: str) -> str:
                 row_text = "  ".join([cell.get_text(strip=True) for cell in cells])
                 if row_text:
                     texts.append(row_text)
-
+    print(f"end={len(texts)}")
     # Join texts and clean up extra whitespace
     content = "\n".join(texts)
     # Replace multiple newlines with double newline
@@ -138,6 +138,8 @@ def clean_markdown(section: str) -> str:
 
 
 def process_function(func_name: str) -> str:
+    print(f"Processing {func_name}...")
+
     key = func_name.replace("_", "")
     try:
         soup = fetch_page(key)
