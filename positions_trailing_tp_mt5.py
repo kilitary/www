@@ -160,37 +160,37 @@ def calculate_trailing_sl_tp(position, tick, symbol_info):
 
     if position_type == mt5.ORDER_TYPE_BUY:
         new_profitable_sl = normalize_double(
-            tick.ask - FREEZE_SL_POINTS * point,
+            tick.bid - FREEZE_SL_POINTS * point,
             digits,
         )
 
         if profit >= MIN_CURRENT_PROFIT and new_profitable_sl > sl:
             new_sl = normalize_double(
-                (tick.ask - TRAIL_PROFIT_STEP * point),
+                (tick.bid - TRAIL_PROFIT_STEP * point),
                 digits,
             )
             profit_calc = normalize_double(
-                position.volume * (tick.ask - price_open) / point, digits
+                position.volume * (tick.bid - price_open) / point, digits
             )
             log(f" -> freezing {profit_calc:5.2f} new_sl={new_sl} sl={sl}")
         else:
-            new_sl = normalize_double(tick.ask - TRAIL_STEP * point, digits)
+            new_sl = normalize_double(tick.bid - TRAIL_STEP * point, digits)
 
-        new_tp = normalize_double(tick.ask + TRAIL_STEP * point, digits)
+        new_tp = normalize_double(tick.bid + TRAIL_STEP * point, digits)
     else:
         new_profitable_sl = normalize_double(
-            tick.bid - FREEZE_SL_POINTS * point, digits
+            tick.ask - FREEZE_SL_POINTS * point, digits
         )
         if profit >= MIN_CURRENT_PROFIT and new_profitable_sl < sl:
-            new_sl = normalize_double((tick.bid + TRAIL_PROFIT_STEP * point), digits)
+            new_sl = normalize_double((tick.ask + TRAIL_PROFIT_STEP * point), digits)
             profit_calc = normalize_double(
-                (price_open - tick.bid) * position.volume / point, digits
+                (price_open - tick.ask) * position.volume / point, digits
             )
             log(f" -> freezing {profit_calc:5.2f} new_sl={new_sl} sl={sl}")
         else:
-            new_sl = normalize_double(tick.bid + TRAIL_STEP * point, digits)
+            new_sl = normalize_double(tick.ask + TRAIL_STEP * point, digits)
 
-        new_tp = normalize_double(tick.bid - TRAIL_STEP * point, digits)
+        new_tp = normalize_double(tick.ask - TRAIL_STEP * point, digits)
 
     new_sl = normalize_double(new_sl, digits)
     return new_sl, new_tp
